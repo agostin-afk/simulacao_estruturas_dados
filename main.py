@@ -5,9 +5,9 @@ from fila import Fila
 from pilha import Pilha
 from lista import ListaEncadeada
 from tabelaHash import HashTable
-import random
-from os import getenv
-from dotenv import load_dotenv
+from treeavl import AVLTree
+
+
 
 
 class MainWindow():
@@ -34,6 +34,7 @@ class MainWindow():
         notebook = ttk.Notebook(self.root)
         notebook.pack(fill='both', expand=True)    
         frame_arvore = ttk.Frame(notebook)
+        frame_arvoreAVL = ttk.Frame(notebook)
         frame_pilha = ttk.Frame(notebook)
         frame_fila = ttk.Frame(notebook)
         frame_lista = ttk.Frame(notebook)
@@ -41,16 +42,18 @@ class MainWindow():
         
         
         notebook.add(frame_arvore, text='Arvore')
+        notebook.add(frame_arvoreAVL, text='Arvore AVL')
         notebook.add(frame_pilha, text='Pilha')
         notebook.add(frame_fila, text='Fila')
         notebook.add(frame_lista, text='Lista Encadeada')
         notebook.add(frame_hash, text='Tabela Hash')
         
-        for frame in [frame_arvore, frame_pilha, frame_fila, frame_lista, frame_hash]:
+        for frame in [frame_arvore, frame_arvoreAVL, frame_pilha, frame_fila, frame_lista, frame_hash]:
             frame.grid_rowconfigure(0, weight=1)
             frame.grid_columnconfigure(0, weight=1)
         
         self.tree = BinaryTree(frame_arvore)
+        self.avltree = AVLTree(frame_arvoreAVL)
         self.stack = Pilha(frame_pilha)
         self.queue = Fila(frame_fila)
         self.linked_list = ListaEncadeada(frame_lista)

@@ -1,7 +1,5 @@
 import tkinter as tk
 from tkinter import messagebox
-import random
-
 
 class TreeNode:
     def __init__(self, value):
@@ -28,8 +26,9 @@ class BinaryTree:
         self.traversal_frame.pack(pady=5, fill=tk.X)   
         self.canvas.bind("<Configure>", self.on_resize)
         self.root = None
+        self.selected_node = None
         
-        self.setup(10)  
+        self.setup(45)  
     
     def setup(self, root_value):
         tk.Button(self.control_frame, text="Insert", command=self.insert_gui).pack(side=tk.LEFT, padx=5)
@@ -50,18 +49,14 @@ class BinaryTree:
         tk.Button(self.traversal_frame, text="Post-order", command=self.show_postorder).pack(side=tk.LEFT, padx=5)
         tk.Button(self.traversal_frame, text="Level-order", command=self.show_levelorder).pack(side=tk.LEFT, padx=5)
         
-        if self.root:
-            self.visualize_tree()
-        else:
-            self.canvas.create_text(500, 350, text="Árvore Vazia", font=("Arial", 24), fill="gray")
-        
-    # metodos para gui:
+        self.visualize_tree()
+    
     def insert_gui(self):
         try:
             value = int(self.entry.get())
             self.insert(value)
             self.visualize_tree()
-            self.status.config(text=f"inserido: {value}")
+            self.status.config(text=f"Inserido: {value}")
         except ValueError:
             messagebox.showerror("Error", "Coloque um valor inteiro")
      
@@ -72,17 +67,21 @@ class BinaryTree:
                 self.visualize_tree()
                 self.status.config(text=f"Deletado: {value}")
             else:
-                self.status.config(text=f"Value: {value} not found")
+                self.status.config(text=f"Valor: {value} não encontrado")
         except ValueError:
             messagebox.showerror("Error", "Coloque um valor inteiro")
     
     def search_gui(self):
         try:
             value = int(self.entry.get())
-            if self.search(value):
-                self.status.config(text=f"Found: {value}")
+            node = self.search(value)
+            if node:
+                self.selected_node = node
+                self.status.config(text=f"Encontrado: {value}")
             else:
-                self.status.config(text=f"value: {value} not found")
+                self.selected_node = None
+                self.status.config(text=f"Valor: {value} não encontrado")
+            self.visualize_tree()
         except ValueError:
             messagebox.showerror("Error", "Insira um valor inteiro")
     
@@ -106,8 +105,9 @@ class BinaryTree:
     
     def clear_tree(self):
         self.root = None
-        self.canvas.delete("all")
-        self.status.config(text="Tree cleared")
+        self.selected_node = None
+        self.visualize_tree()
+        self.status.config(text="Árvore limpa")
     
     def delete(self, value):
         if self.root is None:
@@ -197,17 +197,17 @@ class BinaryTree:
         
     def search(self, value):
         if self.root is None:
-            return False
+            return None
         queue = [self.root]
         while queue:
             current = queue.pop(0)
             if current.value == value:
-                return True
+                return current
             if current.left:
                 queue.append(current.left)
             if current.right:
                 queue.append(current.right)
-        return False
+        return None
     
     def show_inorder(self):
         traversal = self.traverse_inorder()
@@ -232,7 +232,9 @@ class BinaryTree:
     def visualize_tree(self):
         self.canvas.delete("all")
         if not self.root:
+            self.canvas.create_text(self.canvas.winfo_width() / 2, self.canvas.winfo_height() / 2, text="Árvore Vazia", font=("Arial", 24), fill="gray")
             return
+        
         levels = []
         queue = [(self.root, 0)]
         while queue:
@@ -244,18 +246,18 @@ class BinaryTree:
                 queue.append((node.left, level+1))
             if node.right:
                 queue.append((node.right, level+1))
+        
         canvas_width = self.canvas.winfo_width()
         canvas_height = self.canvas.winfo_height()
         tree_height = len(levels)
-        if tree_height > 0:
-            vertical_spacing = (canvas_height - 100) / tree_height
-        else:
-            vertical_spacing = 0
+        vertical_spacing = (canvas_height - 100) / tree_height if tree_height > 0 else 0
+        
         for level_num, nodes in enumerate(levels):
             n = len(nodes)
             for i, node in enumerate(nodes):
                 node.x = (i + 1) * canvas_width / (n + 1)
                 node.y = 50 + level_num * vertical_spacing
+        
         queue = [self.root]
         while queue:
             current = queue.pop(0)
@@ -265,7 +267,10 @@ class BinaryTree:
             if current.right:
                 self.canvas.create_line(current.x, current.y, current.right.x, current.right.y, fill="blue", width=2)
                 queue.append(current.right)
-            self.canvas.create_oval(current.x-20, current.y-20, current.x+20, current.y+20, fill="lightblue", outline="black")
+            
+            fill_color = "lightgreen" if current == self.selected_node else "lightblue"
+            self.canvas.create_oval(current.x-20, current.y-20, current.x+20, current.y+20, fill=fill_color, outline="black")
             self.canvas.create_text(current.x, current.y, text=str(current.value), font=("Arial", 12, "bold"))
+    
     def on_resize(self, event):
         self.visualize_tree()
