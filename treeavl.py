@@ -89,7 +89,7 @@ class AVLTree:
         tk.Button(self.control_frame, text="Insert", command=self.insert_gui).pack(side=tk.LEFT, padx=5)
         tk.Button(self.control_frame, text="Delete", command=self.delete_gui).pack(side=tk.LEFT, padx=5)
         tk.Button(self.control_frame, text="Search", command=self.search_gui).pack(side=tk.LEFT, padx=5)
-        tk.Button(self.control_frame, text="Clear", command=self.clear_tree).pack(side=tk.LEFT, padx=5)
+        tk.Button(self.control_frame, text="Limpar", command=self.clear_tree).pack(side=tk.LEFT, padx=5)
         
         # Barra de status
         self.status = tk.Label(self.parent_frame, text="Árvore AVL - Inicie com inserções", 

@@ -59,7 +59,7 @@ class Pilha:
         tk.Button(self.control_frame, text="Push", command=self.push_gui).pack(side=tk.LEFT, padx=5)
         tk.Button(self.control_frame, text="Pop", command=self.pop_gui).pack(side=tk.LEFT, padx=5)
         tk.Button(self.control_frame, text="Top", command=self.top_gui).pack(side=tk.LEFT, padx=5)
-        tk.Button(self.control_frame, text="Clear", command=self.clear_stack).pack(side=tk.LEFT, padx=5)
+        tk.Button(self.control_frame, text="Limpar", command=self.clear_stack).pack(side=tk.LEFT, padx=5)
         
         # Barra de status
         self.status = tk.Label(self.parent_frame, text="Pilha Vazia", 

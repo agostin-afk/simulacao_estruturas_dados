@@ -58,7 +58,7 @@ class Fila:
         # Botões de operações
         tk.Button(self.control_frame, text="Enqueue", command=self.enqueue_gui).pack(side=tk.LEFT, padx=5)
         tk.Button(self.control_frame, text="Dequeue", command=self.dequeue_gui).pack(side=tk.LEFT, padx=5)
-        tk.Button(self.control_frame, text="Clear", command=self.clear_queue).pack(side=tk.LEFT, padx=5)
+        tk.Button(self.control_frame, text="Limpar", command=self.clear_queue).pack(side=tk.LEFT, padx=5)
         
         # Barra de status
         self.status = tk.Label(self.parent_frame, text="Fila Vazia", 
